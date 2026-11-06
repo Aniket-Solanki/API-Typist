@@ -1,0 +1,61 @@
+{
+  "name": "api-typist",
+  "version": "1.0.0",
+  "description": "Generate TypeScript types, Zod/Valibot schemas, and typed API clients from JSON samples, OpenAPI specs, or GraphQL introspection",
+  "main": "dist/cli.js",
+  "bin": {
+    "api-typist": "dist/cli.js"
+  },
+  "scripts": {
+    "test": "vitest run",
+    "build": "tsc",
+    "dev": "tsx watch src/cli.ts",
+    "start": "node dist/cli.js",
+    "package": "vsce package",
+    "publish": "vsce publish"
+  },
+  "keywords": [
+    "typescript",
+    "types",
+    "zod",
+    "valibot",
+    "openapi",
+    "graphql",
+    "codegen",
+    "api-client",
+    "tanstack-query",
+    "swr",
+    "rtk-query",
+    "vscode-extension"
+  ],
+  "author": "",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/api-typist/api-typist.git"
+  },
+  "bugs": {
+    "url": "https://github.com/api-typist/api-typist/issues"
+  },
+  "homepage": "https://github.com/api-typist/api-typist#readme",
+  "type": "module",
+  "devDependencies": {
+    "@types/chokidar": "^1.7.5",
+    "@types/js-yaml": "^4.0.9",
+    "@types/node": "^26.6.6",
+    "@types/vscode": "^1.93.0",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2",
+    "vitest": "^5.1.0",
+    "vsce": "^2.25.0"
+  },
+  "dependencies": {
+    "chokidar": "^6.0.0",
+    "js-yaml": "^5.5.0",
+    "json-schema-to-zod": "^2.8.1",
+    "quicktype-core": "^26.0.0",
+    "valibot": "^1.5.0",
+    "zod": "^4.6.7",
+    "zod-to-json-schema": "^3.25.2"
+  }
+}
