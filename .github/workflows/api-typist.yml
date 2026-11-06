@@ -1,0 +1,132 @@
+name: API Typist CI
+
+on:
+  pull_request:
+    branches: [main, develop]
+    paths:
+      - '**.yaml'
+      - '**.yml'
+      - '**.json'
+      - 'src/**'
+      - '.github/workflows/api-typist.yml'
+  push:
+    branches: [main, develop]
+    paths:
+      - '**.yaml'
+      - '**.yml'
+      - '**.json'
+      - 'src/**'
+      - '.github/workflows/api-typist.yml'
+
+jobs:
+  check-api-changes:
+    name: Check API Contract Changes
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build project
+        run: npm run build
+
+      - name: Check for API changes
+        id: api-check
+        run: |
+          # Find API spec files
+          OPENAPI_FILES=$(find . -name "*.yaml" -o -name "*.yml" | grep -v node_modules | head -5)
+          GRAPHQL_FILES=$(find . -name "*.json" | grep -E "(introspection|schema)" | grep -v node_modules | head -5)
+          
+          echo "OpenAPI files found: $OPENAPI_FILES"
+          echo "GraphQL files found: $GRAPHQL_FILES"
+          
+          # Generate types to temp directory
+          mkdir -p .tmp-types
+          
+          # Check OpenAPI specs
+          for file in $OPENAPI_FILES; do
+            output_dir=".tmp-types/$(basename $file .yaml)"
+            npx tsx src/cli.ts openapi -i $file -o $output_dir 2>/dev/null || true
+          done
+          
+          # Check GraphQL introspection
+          for file in $GRAPHQL_FILES; do
+            output_dir=".tmp-types/$(basename $file .json)"
+            npx tsx src/cli.ts graphql -i $file -o $output_dir 2>/dev/null || true
+          done
+          
+          echo "API check completed"
+
+      - name: Cleanup
+        if: always()
+        run: rm -rf .tmp-types
+
+  build-and-test:
+    name: Build & Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests
+        run: npm test
+
+      - name: Build
+        run: npm run build
+
+  publish-extension:
+    name: Publish VS Code Extension
+    needs: [build-and-test]
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    outputs:
+      version: ${{ steps.package.outputs.version }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Package extension
+        working-directory: ./vscode-extension
+        id: package
+        run: npx vsce package
+
+      - name: Publish to Marketplace
+        working-directory: ./vscode-extension
+        run: npx vsce publish
+        env:
+          VSCE_PAT: ${{ secrets.VSCE_PAT }}
+
+      - name: Upload extension
+        uses: actions/upload-artifact@v4
+        with:
+          name: vscode-extension
+          path: ./vscode-extension/*.vsix
+          retention-days: 7

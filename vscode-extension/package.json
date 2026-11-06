@@ -1,0 +1,101 @@
+{
+  "name": "api-typist",
+  "displayName": "API Typist",
+  "description": "Generate TypeScript types, Zod schemas, and API clients from JSON samples, OpenAPI, or GraphQL introspection",
+  "version": "1.0.0",
+  "publisher": "api-typist",
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "icon": "images/icon.png",
+  "gallery": {
+    "homepage": "https://github.com/api-typist/api-typist",
+    "description": "Generate TypeScript types, Zod schemas, and API clients from JSON samples, OpenAPI specs, or GraphQL introspection. Paste JSON to instantly get types!",
+    "issues": "https://github.com/api-typist/api-typist/issues",
+    "releases": {
+      "changelog": "https://github.com/api-typist/api-typist/releases"
+    }
+  },
+  "activationEvents": [
+    "onCommand:api-typist.pasteJson",
+    "onCommand:api-typist.fromGraphQL",
+    "onCommand:api-typist.fromOpenAPI"
+  ],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "api-typist.pasteJson",
+        "title": "API Typist: Paste JSON to Types",
+        "category": "API Typist"
+      },
+      {
+        "command": "api-typist.fromGraphQL",
+        "title": "API Typist: Generate from GraphQL Introspection",
+        "category": "API Typist"
+      },
+      {
+        "command": "api-typist.fromOpenAPI",
+        "title": "API Typist: Generate from OpenAPI Spec",
+        "category": "API Typist"
+      },
+      {
+        "command": "api-typist.showConfig",
+        "title": "API Typist: Show Configuration",
+        "category": "API Typist"
+      }
+    ],
+    "menus": {
+      "explorer/context": [
+        {
+          "command": "api-typist.fromGraphQL",
+          "when": "resourceExtname == .json"
+        },
+        {
+          "command": "api-typist.fromOpenAPI",
+          "when": "resourceExtname == .yaml || resourceExtname == .yml"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "API Typist",
+      "properties": {
+        "api-typist.outputDirectory": {
+          "type": "string",
+          "default": "./generated",
+          "description": "Default output directory for generated files"
+        },
+        "api-typist.framework": {
+          "type": "string",
+          "default": "tanstack-query",
+          "enum": ["tanstack-query", "swr", "rtk-query", "fetch", "axios", "ky"],
+          "description": "Default framework for generated hooks"
+        },
+        "api-typist.validator": {
+          "type": "string",
+          "default": "zod",
+          "enum": ["zod", "valibot", "none"],
+          "description": "Default validation library"
+        },
+        "api-typist.includeMocks": {
+          "type": "boolean",
+          "default": true,
+          "description": "Generate mock data generators"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "eslint src --ext .ts",
+    "test": "npm run compile && npm run lint && npm run test:unit",
+    "test:unit": "mocha --timeout 30000 --require ts-node/register src/test/**/*.ts"
+  }
+}
