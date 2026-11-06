@@ -1,0 +1,9 @@
+node_modules/
+dist/
+generated/
+generated-openapi/
+generated-graphql/
+*.log
+.DS_Store
+api-typist.config.json
+package-lock.json
