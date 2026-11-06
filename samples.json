@@ -1,0 +1,56 @@
+[
+  {
+    "id": "550e8400-e29b-41d4-a716-446655440000",
+    "name": "John Doe",
+    "email": "john@example.com",
+    "age": 30,
+    "isActive": true,
+    "role": "admin",
+    "permissions": ["read", "write", "delete"],
+    "profile": {
+      "bio": "Software engineer",
+      "avatar": "https://example.com/avatar.png",
+      "createdAt": "2024-01-15T10:30:00Z"
+    },
+    "settings": {
+      "theme": "dark",
+      "notifications": true
+    }
+  },
+  {
+    "id": "550e8400-e29b-41d4-a716-446655440001",
+    "name": "Jane Smith",
+    "email": "jane@example.com",
+    "age": 25,
+    "isActive": false,
+    "role": "user",
+    "permissions": ["read"],
+    "profile": {
+      "bio": "Designer",
+      "avatar": null,
+      "createdAt": "2024-02-20T14:45:00Z"
+    },
+    "settings": {
+      "theme": "light",
+      "notifications": false
+    }
+  },
+  {
+    "id": "550e8400-e29b-41d4-a716-446655440002",
+    "name": "Bob Wilson",
+    "email": "bob@example.com",
+    "age": 35,
+    "isActive": true,
+    "role": "moderator",
+    "permissions": ["read", "write"],
+    "profile": {
+      "bio": null,
+      "avatar": "https://example.com/bob.png",
+      "createdAt": "2024-03-10T09:15:00Z"
+    },
+    "settings": {
+      "theme": "dark",
+      "notifications": true
+    }
+  }
+]
