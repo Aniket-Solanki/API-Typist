@@ -1,0 +1,85 @@
+openapi: 3.0.3
+info:
+  title: Sample API
+  version: 1.0.0
+paths:
+  /users:
+    get:
+      summary: List users
+      operationId: listUsers
+      responses:
+        '200':
+          description: A list of users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+  /users/{id}:
+    get:
+      summary: Get user by ID
+      operationId: getUser
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: A single user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+components:
+  schemas:
+    User:
+      type: object
+      required:
+        - id
+        - name
+        - email
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        email:
+          type: string
+          format: email
+        age:
+          type: integer
+          format: int32
+          minimum: 0
+        isActive:
+          type: boolean
+        role:
+          type: string
+          enum: [admin, user, guest]
+        profile:
+          $ref: '#/components/schemas/Profile'
+        settings:
+          $ref: '#/components/schemas/Settings'
+    Profile:
+      type: object
+      properties:
+        bio:
+          type: string
+        avatar:
+          type: string
+          format: url
+        createdAt:
+          type: string
+          format: date-time
+    Settings:
+      type: object
+      properties:
+        theme:
+          type: string
+          enum: [light, dark, auto]
+        notifications:
+          type: boolean
