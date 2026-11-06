@@ -40,7 +40,7 @@
   "homepage": "https://github.com/api-typist/api-typist#readme",
   "type": "module",
   "devDependencies": {
-    "@types/chokidar": "^1.7.5",
+    "@types/chokidar": "^2.1.7",
     "@types/js-yaml": "^4.0.9",
     "@types/node": "^26.6.6",
     "@types/vscode": "^1.93.0",
